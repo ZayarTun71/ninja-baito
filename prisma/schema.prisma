@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model tbl_region {
+  region_id      Int       @unique @default(autoincrement())
+  region_name_en String
+  region_name_jp String
+  created_at     DateTime
+  updated_at     DateTime?
+
+  city tbl_city[]
+}
+
+model tbl_city {
+  city_id      Int       @unique @default(autoincrement())
+  city_name_en String
+  city_name_jp String
+  region_id    Int
+  created_at   DateTime
+  updated_at   DateTime?
+
+  region tbl_region @relation(fields: [region_id], references: [region_id])
+  job    tbl_job[]
+}
+
+model tbl_job_type {
+  job_type_id   Int       @unique @default(autoincrement())
+  job_type_name String
+  created_at    DateTime
+  updated_at    DateTime?
+
+  job tbl_job[]
+}
+
+model tbl_job {
+  job_id                   Int       @unique @default(autoincrement())
+  city_id                  Int
+  job_name                 String
+  description              String
+  address                  String
+  email                    String    @unique
+  phone                    Int
+  image                    String?
+  job_type_id              Int
+  maximum_hourly_rate      Int?
+  minimum_hourly_rate      Int
+  minimum_work_day         Int
+  minimum_work_hour        Int
+  staff_position           String
+  is_shift_system          Boolean   @default(true)
+  nearest_train_station    String
+  station_to_work_duration Int
+  latitube                 String
+  longitube                String
+  is_open                  Boolean   @default(true)
+  created_at               DateTime
+  updated_at               DateTime?
+
+  city tbl_city?    @relation(fields: [city_id], references: [city_id])
+  job_type tbl_job_type @relation(fields: [job_type_id], references: [job_type_id])
+}
