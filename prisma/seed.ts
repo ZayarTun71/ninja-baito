@@ -97,6 +97,18 @@ async function main() {
     ...kyushu,
   ];
 
+  const jobTypes = [
+    {job_type_name:"Packing/Sorting"},
+    {job_type_name:"Teaching"},
+    {job_type_name:"Cleaning"},
+    {job_type_name:"Delivery"},
+    {job_type_name:"Convenience Stores"},
+    {job_type_name:"Restaurants and Cafes"},
+    {job_type_name:"Store Staff"},
+    {job_type_name:"Receptionist"},
+    {job_type_name:"Call Center Agent"}
+  ]
+
   const tbl_region = await prisma.tbl_region.createMany({
     data: regions.map((region) => ({
       ...region,
@@ -113,7 +125,15 @@ async function main() {
     skipDuplicates: true, // Optional: skip creating duplicates
   });
 
-  console.log({ tbl_region, tbl_city });
+  const tbl_job_type = await prisma.tbl_job_type.createMany({
+    data: jobTypes.map((jobType) => ({
+      ...jobType,
+      created_at: nowDate,
+    })),
+    skipDuplicates: true, // Optional: skip creating duplicates
+  });
+
+  console.log({ tbl_region, tbl_city, tbl_job_type });
 }
 main()
   .then(async () => {

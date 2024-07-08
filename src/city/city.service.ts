@@ -3,21 +3,21 @@ import { findOnePayload } from 'src/interfaces/region.interface';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
-export class RegionService {
+export class CityService {
   constructor(private readonly prisma: PrismaService) {} // Inject PrismaService
 
   async findAll() {
-    return await this.prisma.tbl_region.findMany();
+    return await this.prisma.tbl_city.findMany();
   }
 
   async findOne(data: findOnePayload) {
     const { id } = data;
-    const region = await this.prisma.tbl_region.findUnique({
-      where: { region_id: +id },
+    const city = await this.prisma.tbl_city.findUnique({
+      where: { city_id: +id },
     });
-    if (!region) {
-      throw new NotFoundException(400,`Region not found`);
+    if (!city) {
+      throw new NotFoundException(400,`City not found`);
     }
-    return region;
+    return city;
   }
 }
